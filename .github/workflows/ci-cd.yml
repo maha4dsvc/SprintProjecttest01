@@ -266,7 +266,63 @@ jobs:
         if: always()
         run: docker logs loginapp
 
-      - name: Container status summary
+      - name: Get container info
+        id: container_info
         run: |
-          echo "===== Running Containers ====="
-          docker ps --filter name=loginapp --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+          CONTAINER_ID=$(docker inspect --format='{{.Id}}' loginapp | cut -c1-12)
+          CONTAINER_IP=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' loginapp)
+          IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          echo "container_id=$CONTAINER_ID" >> $GITHUB_OUTPUT
+          echo "container_ip=$CONTAINER_IP" >> $GITHUB_OUTPUT
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+
+      - name: Print access URLs
+        run: |
+          echo "=============================================="
+          echo "  CONTAINER IS RUNNING"
+          echo "=============================================="
+          echo "  Container Name : loginapp"
+          echo "  Container ID   : ${{ steps.container_info.outputs.container_id }}"
+          echo "  Container IP   : ${{ steps.container_info.outputs.container_ip }}"
+          echo "  App URL        : http://localhost:8080"
+          echo "  Login page     : http://localhost:8080/login"
+          echo "  Home page      : http://localhost:8080/home"
+          echo ""
+          echo "  DockerHub Image: ${{ steps.container_info.outputs.image }}"
+          echo ""
+          echo "  Run anywhere:"
+          echo "  docker run -d -p 8080:8080 ${{ steps.container_info.outputs.image }}"
+          echo "  then open: http://localhost:8080/login"
+          echo "=============================================="
+
+      - name: Write job summary
+        run: |
+          IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          ## Deployment Successful
+
+          | Detail | Value |
+          |--------|-------|
+          | Container Name | \`loginapp\` |
+          | Container ID | \`${{ steps.container_info.outputs.container_id }}\` |
+          | Port | \`8080\` |
+          | DockerHub Image | \`$IMAGE\` |
+
+          ### Access URLs
+          | Page | URL |
+          |------|-----|
+          | Login | http://localhost:8080/login |
+          | Home | http://localhost:8080/home |
+
+          ### Run the container on any machine
+          \`\`\`bash
+          docker pull $IMAGE
+          docker run -d --name loginapp -p 8080:8080 $IMAGE
+          \`\`\`
+          Then open: **http://localhost:8080/login**
+
+          ### Default credentials
+          | Username | Password |
+          |----------|----------|
+          | \`admin\` | \`password\` |
+          EOF
