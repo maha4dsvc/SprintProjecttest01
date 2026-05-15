@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Spring Boot App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .main-content {
+            max-width: 700px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .welcome-card .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-card h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-card h2 span {
+            color: #667eea;
+        }
+
+        .welcome-card p {
+            color: #777;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-top: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .info-card .label {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-card .value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>&#127968; Spring Boot App</h1>
+        <a th:href="@{/logout}" class="logout-btn">Logout</a>
+    </header>
+
+    <div class="main-content">
+        <div class="welcome-card">
+            <div class="icon">&#127881;</div>
+            <h2>Hello, <span th:text="${username}">User</span>!</h2>
+            <p>You have successfully logged in to the Spring Boot application.<br>
+               Spring Security is protecting this page.</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="label">Logged in as</div>
+                    <div class="value" th:text="${username}">admin</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Framework</div>
+                    <div class="value">Spring Boot 3</div>
+                </div>
+                <div class="info-card">
+                    <div class="label">Security</div>
+                    <div class="value">Spring Security</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
